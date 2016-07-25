@@ -16,18 +16,20 @@ import Language.Static.Combinators as S
 import Language.Static.Error as S
 import Language.Static.Type as S
 
-type Static e ast a = StaticT Identity e ast a
+type Static s e ast a = StaticT s e ast Identity a
 
 checkWithT :: (Monad m, AST ast)
-          => (ast -> StaticT m e ast a)
+          => (ast -> StaticT s e ast m a)
+          -> s
           -> ast
           -> m (Either (StaticError e) a)
-checkWithT f = checkStaticT <*> f
+checkWithT f s = checkStaticT s <*> f
 
 checkT :: (Monad m, AST ast)
-      => ast
-      -> m (Either (StaticError e) (TypeFor ast))
+      => EnvFor ast
+      -> ast
+      -> m (Either (StaticError (ErrorFor ast)) (TypeFor ast))
 checkT = checkWithT infer
 
-check :: AST ast => ast -> Either (StaticError e) (TypeFor ast)
-check = runIdentity . checkT
+check :: AST ast => EnvFor ast -> ast -> Either (StaticError (ErrorFor ast)) (TypeFor ast)
+check s = runIdentity . checkT s
