@@ -21,7 +21,7 @@ checkWithT :: (Monad m, AST ast)
           => (ast -> StaticT m e ast a)
           -> ast
           -> m (Either (StaticError e) a)
-checkWithT f ast = checkStaticT ast (f ast)
+checkWithT f = checkStaticT <*> f
 
 checkT :: (Monad m, AST ast)
       => ast
