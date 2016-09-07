@@ -51,4 +51,4 @@ run :: (Monad m, AST a, AST b)
     => (a -> StaticT m e a (TypeFor a))
     -> a
     -> StaticT m e b (TypeFor a)
-run f ast = require ast $ f ast
+run f = require <*> f
