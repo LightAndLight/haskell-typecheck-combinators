@@ -2,6 +2,7 @@
 
 module Language.Static
   ( module S
+  , Static
   , checkWithT
   , checkT
   , check
